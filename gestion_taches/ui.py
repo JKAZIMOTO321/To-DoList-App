@@ -1,20 +1,20 @@
+from PyQt5.QtCore import QDate
 from PyQt5.QtWidgets import (
-    QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
-    QTableWidget, QTableWidgetItem, QLabel, QLineEdit, QTextEdit, QComboBox, QDateEdit, QMessageBox
-)
-from PyQt5.QtCore import Qt, QDate
-import sys
+            QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton,
+            QTableWidget, QTableWidgetItem, QLabel, QLineEdit, QTextEdit, QComboBox, QDateEdit, QMessageBox,
+            QStackedWidget, QMenuBar, QAction
+        )
 
 class TaskManagerUI(QMainWindow):
+
     def __init__(self):
         super().__init__()
+
         self.setWindowTitle("Gestionnaire de tâches")
         self.setGeometry(100, 100, 800, 600)
 
-        from PyQt5.QtWidgets import QStackedWidget, QMenuBar, QAction
 
         self.central_widget = QWidget()
-        self.setCentralWidget(self.central_widget)
         self.central_layout = QVBoxLayout()
         self.central_widget.setLayout(self.central_layout)
 
@@ -35,6 +35,21 @@ class TaskManagerUI(QMainWindow):
         self.panel_liste = QWidget()
         self.liste_layout = QVBoxLayout()
         self.panel_liste.setLayout(self.liste_layout)
+        # Filtre par statut (doit être après la création de self.liste_layout)
+        self.filter_layout = QHBoxLayout()
+        self.status_filter = QComboBox()
+        self.status_filter.addItem("Tous les statuts")
+        self.status_filter.addItems(["À faire", "En cours", "Terminée"])
+        
+        self.priority_filter = QComboBox()
+        self.priority_filter.addItem("Toutes les priorités")
+        self.priority_filter.addItems(["Faible", "Normale", "Urgente"])
+        
+        self.filter_layout.addWidget(QLabel("Statut : "))
+        self.filter_layout.addWidget(self.status_filter)
+        self.filter_layout.addWidget(QLabel("  Priorité : "))
+        self.filter_layout.addWidget(self.priority_filter)
+        self.liste_layout.insertLayout(0, self.filter_layout)
         self.table = QTableWidget()
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels([
@@ -81,8 +96,14 @@ class TaskManagerUI(QMainWindow):
         self.stacked.addWidget(self.panel_liste)  # index 0
         self.stacked.addWidget(self.panel_form)   # index 1
         self.central_layout.addWidget(self.stacked)
+        self.setCentralWidget(self.central_widget)
 
         # Connexions des boutons (slots à connecter dans main.py)
+        # self.add_btn.clicked.connect(...)
+        # self.edit_btn.clicked.connect(...)
+        # self.delete_btn.clicked.connect(...)
+        # self.done_btn.clicked.connect(...)
+        # self.save_btn.clicked.connect(...)
         # self.add_btn.clicked.connect(...)
         # self.edit_btn.clicked.connect(...)
         # self.delete_btn.clicked.connect(...)
